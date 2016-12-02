@@ -160,7 +160,8 @@ $maxDate = $stmt->fetchColumn(0);
                     createLoading();
                     getLog(dateLog01, dateLog02)
                             .then(function (result) {
-                                createChart(createLabel(date01, date02), createData(result));
+                                createChart(createLabel(date01, date02), createData(result[0]));
+                                console.table(result[1]);
                                 removeLoading();
                             }, function () {
                                 alert('ログの取得に失敗しました');

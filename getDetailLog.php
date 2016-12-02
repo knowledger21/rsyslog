@@ -24,26 +24,29 @@ function retrieve() {
 
     $setArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     $priorityArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-    $array = array();
+    $arrayPriority = array();
+    $arrayLog = array();
     $i = 0;
+    //指定期間が二ヶ月以上の場合
     while ($dateFormat01 <= $dateFormat02) {
-        array_push($array, $priorityArray); //期間分,priority分の二次元配列を用意
-        $stmt = $db->prepare("select priority from SystemEvents where encodedate = :date");
-        //以前
-        //select priority from SystemEvents where to_date(devicereportedtime::text,'yyyy-mm') = to_date(:date,'yyyy-mm');
+        array_push($arrayPriority, $priorityArray); //期間分,priority分の二次元配列を用意
+        $stmt = $db->prepare("select id,devicereportedtime,facility,priority,message from SystemEvents where encodedate = :date");
         $stmt->bindValue(':date', $dateFormat01);
         $stmt->execute();
         $logObject = $stmt->fetchAll();
+        $j = 0;
         foreach ($logObject as $loop) {
-            $array[$i][$loop['priority']] ++;
+            $arrayPriority[$i][$loop['priority']] ++;
+            $arrayLog[$i][$j] = $loop;
+            $j++;
         }
         $i++;
         $dateFormat01 = date('Y-m', strtotime(date($dateFormat01) . '+1 month'));
     }
-    return $array;
+    return array($arrayPriority,$arrayLog);
 }
 
-function output($val = array()) {
+function output($val) {
     header('Content-type: application/json');
     echo json_encode($val);
     exit;

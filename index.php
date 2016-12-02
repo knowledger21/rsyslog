@@ -211,6 +211,7 @@
                         for (var j = 0; j < filterPriority.length; j++) {
                             for (var k = 0; k < filterFacility.length; k++) {
                                 if (filterDataBk1[i].active && filterDataBk1[i].values[1] == filterFacility[k] && filterDataBk1[i].values[2] == filterPriority[j]){
+                                    console.log(filterDataBk1[i].markup);
                                     filterData.push(filterDataBk1[i].markup);
                                 }
                             }
