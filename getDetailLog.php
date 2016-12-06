@@ -1,5 +1,5 @@
 <?php
-
+//グラフを取得せず、messageの重複分だけ持ってくる
 $db = new PDO('pgsql:dbname=Syslog;host=localhost;port=5432', 'rsyslog', 'knowledger21', array(
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -51,23 +51,6 @@ function output($val) {
     echo json_encode($val);
     exit;
 }
-
-//function retrieve() {
-//    global $db;
-//    global $dateLog01;
-//    global $dateLog02;
-//    $stmt = $db->prepare("select priority,devicereportedtime,message from SystemEvents where to_date(devicereportedtime::text,'yyyy-mm') between to_date(:dateLog01,'yyyy-mm') and to_date(:dateLog02,'yyyy-mm')");
-//    $stmt->bindValue(':dateLog01' , $dateLog01);
-//    $stmt->bindValue(':dateLog02' , $dateLog02);
-//    $stmt->execute();
-//    return $stmt->fetchAll();
-//}
-//
-//function output($val = array()) {
-//    header('Content-type: application/json');
-//    echo json_encode($val);
-//    exit;
-//}
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
