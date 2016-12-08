@@ -27,12 +27,12 @@ $maxDate = $stmt->fetchColumn(0);
         <script src="./js/ripples.min.js"></script>
         <script src="./js/clusterize.min.js"></script>
         <link rel="stylesheet" type="text/css" href="./css/reset.css">
-        <link rel="stylesheet" type="text/css" href="./css/common.css">
         <link rel="stylesheet" type="text/css" href="./css/clusterize.css">
         <link rel="stylesheet" type="text/css" href="./css/bootstrap-material-design.min.css">
         <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="./css/ripples.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="./css/common.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
     </head>
     <body>
         <div id="wrapper">
@@ -99,6 +99,33 @@ $maxDate = $stmt->fetchColumn(0);
                             <option value="12">12</option>                    
                         </select>
                     </div>
+                    <div class="checkbox">
+                        <p>priority</p>
+                        <label>
+                            <input type="checkbox" checked="checked" class="priorityArea" value="0"> 0
+                        </label>
+                        <label>
+                            <input type="checkbox" checked="checked" class="priorityArea" value="1"> 1
+                        </label>
+                        <label>
+                            <input type="checkbox" checked="checked" class="priorityArea" value="2"> 2
+                        </label>
+                        <label>
+                            <input type="checkbox" checked="checked" class="priorityArea" value="3"> 3
+                        </label>
+                        <label>
+                            <input type="checkbox"  class="priorityArea" value="4"> 4
+                        </label>
+                        <label>
+                            <input type="checkbox" class="priorityArea" value="5"> 5
+                        </label>
+                        <label>
+                            <input type="checkbox" class="priorityArea" value="6"> 6
+                        </label>
+                        <label>
+                            <input type="checkbox" class="priorityArea" value="7"> 7
+                        </label>
+                    </div>
                     <p id="showBtn" style="display: inline-block; margin-bottom: -4px;"><a style="margin-top: -4px;" class="btn btn-raised btn-default">表示する</a></p>
                 </form>
                 <canvas id="DetailChart" width="1200" height="500"></canvas>
@@ -115,6 +142,7 @@ $maxDate = $stmt->fetchColumn(0);
 
         </script>
         <script>
+            var filterPriority = [];
             //グラフ用
             //var label = [];
             //var data = [];
@@ -158,10 +186,14 @@ $maxDate = $stmt->fetchColumn(0);
                         return;
                     }
                     createLoading();
-                    getLog(dateLog01, dateLog02)
+                    filterPriority.length = 0;
+                    filterPriority = $('.priorityArea:checked').map(function () {
+                        return $(this).val();
+                    }).get();
+                    getLog(dateLog01, dateLog02, filterPriority)
                             .then(function (result) {
-                                createChart(createLabel(date01, date02), createData(result[0]));
-                                console.table(result[1]);
+//                                createChart(createLabel(date01, date02), createData(result[0]));
+//                                console.table(result[1]);
                                 removeLoading();
                             }, function () {
                                 alert('ログの取得に失敗しました');
@@ -184,76 +216,76 @@ $maxDate = $stmt->fetchColumn(0);
             }
 
             //labelの設定
-            function createLabel(date01, date02) {
-                var date01ms = date01.getTime();
-                var date02ms = date02.getTime();
-                var label = [];
-                while (date01ms <= date02ms) {
-                    var newDate = new Date(date01ms);
-                    newDate.setMonth(newDate.getMonth() + 1);
-                    if (newDate.getMonth() === 0) {
-                        label.push(newDate.getFullYear() - 1 + '/12');
-                    } else {
-                        label.push(newDate.getFullYear() + '/' + newDate.getMonth());
-                    }
-                    date01ms = newDate.getTime();
-                }
-                return label;
-            }
+//            function createLabel(date01, date02) {
+//                var date01ms = date01.getTime();
+//                var date02ms = date02.getTime();
+//                var label = [];
+//                while (date01ms <= date02ms) {
+//                    var newDate = new Date(date01ms);
+//                    newDate.setMonth(newDate.getMonth() + 1);
+//                    if (newDate.getMonth() === 0) {
+//                        label.push(newDate.getFullYear() - 1 + '/12');
+//                    } else {
+//                        label.push(newDate.getFullYear() + '/' + newDate.getMonth());
+//                    }
+//                    date01ms = newDate.getTime();
+//                }
+//                return label;
+//            }
 
             //dataの設定
-            function createData(result) {
-                var data = [];
-                for (var i = 0; i < result.length; i++) {
-                    data.push(result[i][0]);
-                }
-                return data;
-            }
-
-            //グラフ描画
-            function createChart(label, data) {
-                var ctx = document.getElementById("DetailChart");
-                var priorityLineChart = new Chart(ctx, {
-                    //グラフの種類
-                    type: 'line',
-                    //データの設定
-                    data: {
-                        //データ項目のラベル
-                        labels: label,
-                        //データセット
-                        datasets: [{
-                                //凡例
-                                label: "priority:0",
-                                //面の表示
-                                fill: false,
-                                //線のカーブ
-                                lineTension: 0,
-                                //背景色
-                                backgroundColor: "rgba(183,28,28,0.4)",
-                                //枠線の色
-                                borderColor: "rgba(183,28,28,1)",
-                                //結合点の背景色
-                                pointBackgroundColor: "#fff",
-                                //グラフのデータ
-                                data: data
-                                        ////[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                            }
-                        ]
-                    },
-                    //オプションの設定
-                    options: {
-                        scales: {
-                            //縦軸の設定
-                            yAxes: [{
-                                    ticks: {
-                                        //最小値を0にする
-                                        beginAtZero: true
-                                    }
-                                }]
-                        }
-                    }
-                });
-            }
+//            function createData(result) {
+//                var data = [];
+//                for (var i = 0; i < result.length; i++) {
+//                    data.push(result[i][0]);
+//                }
+//                return data;
+//            }
+//
+//            //グラフ描画
+//            function createChart(label, data) {
+//                var ctx = document.getElementById("DetailChart");
+//                var priorityLineChart = new Chart(ctx, {
+//                    //グラフの種類
+//                    type: 'line',
+//                    //データの設定
+//                    data: {
+//                        //データ項目のラベル
+//                        labels: label,
+//                        //データセット
+//                        datasets: [{
+//                                //凡例
+//                                label: "priority:0",
+//                                //面の表示
+//                                fill: false,
+//                                //線のカーブ
+//                                lineTension: 0,
+//                                //背景色
+//                                backgroundColor: "rgba(183,28,28,0.4)",
+//                                //枠線の色
+//                                borderColor: "rgba(183,28,28,1)",
+//                                //結合点の背景色
+//                                pointBackgroundColor: "#fff",
+//                                //グラフのデータ
+//                                data: data
+//                                        ////[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+//                            }
+//                        ]
+//                    },
+//                    //オプションの設定
+//                    options: {
+//                        scales: {
+//                            //縦軸の設定
+//                            yAxes: [{
+//                                    ticks: {
+//                                        //最小値を0にする
+//                                        beginAtZero: true
+//                                    }
+//                                }]
+//                        }
+//                    }
+//                });
+//            }
 
             //ロード画面表示
             function createLoading() {
@@ -263,6 +295,9 @@ $maxDate = $stmt->fetchColumn(0);
             function removeLoading() {
                 $('.loader').remove();
             }
+        </script>
+        <script>
+            $.material.init();
         </script>
     </body>
 </html>
