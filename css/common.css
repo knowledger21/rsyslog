@@ -21,6 +21,7 @@ and open the template in the editor.
 }
 body{
     background-color: #ECEFF1;
+    box-sizing: border-box;
 }
 #wrapper{
     font-family: 'Roboto', sans-serif;
@@ -112,16 +113,25 @@ nav > ul> li:first-child{
 }
 .logMessage{
 /*    width: 935px;*/
-    width: 810px;
+    width: 792px;
     word-break: break-all;
+    padding: 0px 10px;
 }
 thead, tbody {
     display: block;
 }
 th{
     text-align: center;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
 }
-
+td{
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+}
+table{
+    border-collapse: collapse;
+}
 #contentArea tr:nth-child(odd){
     background: #B0BEC5;
 }
