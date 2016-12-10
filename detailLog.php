@@ -158,12 +158,13 @@ $maxDate = $stmt->fetchColumn(0);
 
 
             //指定期間のログを取得
-            var getLog = function (dateLog01, dateLog02) {
+            var getLog = function (dateLog01, dateLog02,filterPriority) {
                 var jqXHR = $.ajax({
                     url: 'getDetailLog.php',
                     data: {
                         'dateLog01': dateLog01,
-                        'dateLog02': dateLog02
+                        'dateLog02': dateLog02,
+                        'filterPriority':filterPriority
                     }
                 });
                 return jqXHR.promise();
@@ -190,13 +191,16 @@ $maxDate = $stmt->fetchColumn(0);
                     filterPriority = $('.priorityArea:checked').map(function () {
                         return $(this).val();
                     }).get();
-                    getLog(dateLog01, dateLog02, filterPriority)
+                    console.log(dateLog01+','+dateLog02+','+JSON.stringify(filterPriority));
+                    getLog(dateLog01, dateLog02,JSON.stringify(filterPriority))
                             .then(function (result) {
 //                                createChart(createLabel(date01, date02), createData(result[0]));
 //                                console.table(result[1]);
+                                console.table(result);
                                 removeLoading();
                             }, function () {
                                 alert('ログの取得に失敗しました');
+                                removeLoading();
                             });
                 });
             });

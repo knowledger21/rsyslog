@@ -10,52 +10,57 @@ if (empty($_REQUEST['dateLog01']) && empty($_REQUEST['dateLog02'])) {
 } else {
     $dateLog01 = $_REQUEST['dateLog01'];
     $dateLog02 = $_REQUEST['dateLog02'];
-    $priorityList = $_REQUEST['filterPriority'];
-    $date01 = new DateTime($dateLog01);
-    $date02 = new DateTime($dateLog02);
-    $dateFormat01 = $date01->format('Y-m');
-    $dateFormat02 = $date02->format('Y-m');
+    $priorityList = json_decode($_REQUEST['filterPriority']);
+    //echo 'priorityList' . $priorityList;
+//    $date01 = new DateTime($dateLog01);
+//    $date02 = new DateTime($dateLog02);
+//    $dateFormat01 = $date01->format('Y-m');
+//    $dateFormat02 = $date02->format('Y-m');
     $log = retrieve();
     output($log);
 }
 
 function retrieve() {
     global $db;
-    global $dateFormat01;
-    global $dateFormat02;
+    global $dateLog01;
+    global $dateLog02;
     global $priorityList;
 
     $sql = "select priority, count(*) as count, facility, message from systemevents";
     //where句の生成
     $sqlWhere = [];
-    
-    $stmt = $db->prepare("select count(*),priority,facility,message from systemevents "
-            . "where priority = '0' or priority = '1' or priority = '2' "
-            . "group by message,priority,facility "
-            . "having (count(*) > 0) ;");
-    $stmt->bindValue(':since_id', $since_id);
-//    $setArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-//    $priorityArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-//    $arrayPriority = array();
-//    $arrayLog = array();
-//    $i = 0;
-    //指定期間が二ヶ月以上の場合
-//    while ($dateFormat01 <= $dateFormat02) {
-//        array_push($arrayPriority, $priorityArray); //期間分,priority分の二次元配列を用意
-//        $stmt = $db->prepare("select id,devicereportedtime,facility,priority,message from SystemEvents where encodedate = :date");
-//        $stmt->bindValue(':date', $dateFormat01);
-//        $stmt->execute();
-//        $logObject = $stmt->fetchAll();
-//        $j = 0;
-//        foreach ($logObject as $loop) {
-//            $arrayPriority[$i][$loop['priority']] ++;
-//            $arrayLog[$i][$j] = $loop;
-//            $j++;
-//        }
-//        $i++;
-//        $dateFormat01 = date('Y-m', strtotime(date($dateFormat01) . '+1 month'));
+    $sqlParams = [];
+//    foreach ($priorityList as $list) {
+//        array_push($sqlWhere, "priority = ?");
+//        array_push($sqlParams, $list);
 //    }
-//    return array($arrayPriority,$arrayLog);
+    for ($i = 0; $i < count($priorityList); $i++) {
+        array_push($sqlWhere, "priority = ?");
+        array_push($sqlParams, $priorityList[$i]);
+    }
+    //priorityをすべて外すとエラー
+    //sql組み立て
+    //priorityのwhere句生成
+    if (count($sqlWhere) > 0) {
+        $sql .= ' where (' . implode(" or ", $sqlWhere) . " )";
+    }
+    //dateのwhere句組み立て
+    //dateの日付が同じであればencodedate = 'yyyyx-mm'でよい
+    if ($dateLog01 === $dateLog02) {
+        $sql .= " and encodedate = ?";
+        array_push($sqlParams, $dateLog01);
+    } else {
+        $sql .= " and (encodedate between ? and ?)";
+        array_push($sqlParams, $dateLog01);
+        array_push($sqlParams, $dateLog02);
+    }
+    //group by句とhaving句の生成
+    $sql .= " group by message,priority,facility having (count(*) > 0)";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute($sqlParams);
+    $logObject = $stmt->fetchAll();
+    return array($logObject);
 }
 
 function output($val) {

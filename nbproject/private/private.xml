@@ -4,7 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/xampp/htdocs/rsyslog/index.php</file>
-            <file>file:/C:/xampp/htdocs/rsyslog/css/common.css</file>
+            <file>file:/C:/xampp/htdocs/rsyslog/detailLog.php</file>
+            <file>file:/C:/xampp/htdocs/rsyslog/getDetailLog.php</file>
         </group>
     </open-files>
 </project-private>
