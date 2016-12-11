@@ -128,7 +128,27 @@ $maxDate = $stmt->fetchColumn(0);
                     </div>
                     <p id="showBtn" style="display: inline-block; margin-bottom: -4px;"><a style="margin-top: -4px;" class="btn btn-raised btn-default">表示する</a></p>
                 </form>
-                <canvas id="DetailChart" width="1200" height="500"></canvas>
+                <div class="clusterize" id="reportTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col" class="logPriorty">priority</th>
+                                <th scope="col" class="logFacility">count</th>
+                                <th scope="col" class="logDate" >facility</th>
+                                <th scope="col" class="logMessage">Message</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div id="scrollArea" class="clusterize-scroll">
+                        <table>
+                            <tbody id="contentArea" class="clusterize-content">
+                                <tr class="clusterize-no-data">
+                                    <td>Loading data…</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         <script>
@@ -142,29 +162,23 @@ $maxDate = $stmt->fetchColumn(0);
 
         </script>
         <script>
+            var data = [];//取得してきたlogデータ
             var filterPriority = [];
-            //グラフ用
-            //var label = [];
-            //var data = [];
-            var priorityNum = [0, 0, 0, 0];//0-3のpriority数
-            //var test = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"]; 
-            //var priorityChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; //時間別のログ数を格納(priorityLog
-            var priorityChart01 = [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            ];//縦はpriority,横は時間
-
-
+            var facilityData = ["kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", "uucp", "cron", "authpriv", "ftp",
+                "local0", "local1", "local2", "local3", "local4", "local5", "local6", "local7"];
+            var clusterize = new Clusterize({
+                rows: getData(data),
+                scrollId: 'scrollArea',
+                contentId: 'contentArea'
+            });
             //指定期間のログを取得
-            var getLog = function (dateLog01, dateLog02,filterPriority) {
+            var getLog = function (dateLog01, dateLog02, filterPriority) {
                 var jqXHR = $.ajax({
                     url: 'getDetailLog.php',
                     data: {
                         'dateLog01': dateLog01,
                         'dateLog02': dateLog02,
-                        'filterPriority':filterPriority
+                        'filterPriority': filterPriority
                     }
                 });
                 return jqXHR.promise();
@@ -191,20 +205,37 @@ $maxDate = $stmt->fetchColumn(0);
                     filterPriority = $('.priorityArea:checked').map(function () {
                         return $(this).val();
                     }).get();
-                    console.log(dateLog01+','+dateLog02+','+JSON.stringify(filterPriority));
-                    getLog(dateLog01, dateLog02,JSON.stringify(filterPriority))
+                    console.log(dateLog01 + ',' + dateLog02 + ',' + JSON.stringify(filterPriority));
+                    getLog(dateLog01, dateLog02, JSON.stringify(filterPriority))
                             .then(function (result) {
 //                                createChart(createLabel(date01, date02), createData(result[0]));
 //                                console.table(result[1]);
                                 console.table(result);
+                                var result_length = result.length;
+                                for (var i = 0; i < result_length; i++) {
+                                    data.unshift({
+                                        values: [result[i].priority, result[i].count, result[i].facility, result[i].message],
+                                        markup: '<tr><td class="center logPriorty">' + result[i].priority + '</td><td class="center logFacility">' + result[i].count + '</td><td class="center logDate">' + facilityData[result[i].facility] + '</td><td class="logMessage">' + result[i].message + '</td></tr>',
+                                        active: true
+                                    });
+                                }
+                                clusterize.update(getData(data));
                                 removeLoading();
-                            }, function () {
+                            }
+                            , function () {
                                 alert('ログの取得に失敗しました');
                                 removeLoading();
                             });
                 });
             });
 
+            function getData(data){
+                var getDataList = [];
+                for(var i = 0; i < data.length; i++){
+                    getDataList.push(data[i].markup)
+                }
+                return getDataList;
+            }
             //1年以内
             function oneYear(date01, date02) {
                 var date01ms = date01.getTime();
@@ -218,78 +249,6 @@ $maxDate = $stmt->fetchColumn(0);
                 }
                 return count;
             }
-
-            //labelの設定
-//            function createLabel(date01, date02) {
-//                var date01ms = date01.getTime();
-//                var date02ms = date02.getTime();
-//                var label = [];
-//                while (date01ms <= date02ms) {
-//                    var newDate = new Date(date01ms);
-//                    newDate.setMonth(newDate.getMonth() + 1);
-//                    if (newDate.getMonth() === 0) {
-//                        label.push(newDate.getFullYear() - 1 + '/12');
-//                    } else {
-//                        label.push(newDate.getFullYear() + '/' + newDate.getMonth());
-//                    }
-//                    date01ms = newDate.getTime();
-//                }
-//                return label;
-//            }
-
-            //dataの設定
-//            function createData(result) {
-//                var data = [];
-//                for (var i = 0; i < result.length; i++) {
-//                    data.push(result[i][0]);
-//                }
-//                return data;
-//            }
-//
-//            //グラフ描画
-//            function createChart(label, data) {
-//                var ctx = document.getElementById("DetailChart");
-//                var priorityLineChart = new Chart(ctx, {
-//                    //グラフの種類
-//                    type: 'line',
-//                    //データの設定
-//                    data: {
-//                        //データ項目のラベル
-//                        labels: label,
-//                        //データセット
-//                        datasets: [{
-//                                //凡例
-//                                label: "priority:0",
-//                                //面の表示
-//                                fill: false,
-//                                //線のカーブ
-//                                lineTension: 0,
-//                                //背景色
-//                                backgroundColor: "rgba(183,28,28,0.4)",
-//                                //枠線の色
-//                                borderColor: "rgba(183,28,28,1)",
-//                                //結合点の背景色
-//                                pointBackgroundColor: "#fff",
-//                                //グラフのデータ
-//                                data: data
-//                                        ////[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-//                            }
-//                        ]
-//                    },
-//                    //オプションの設定
-//                    options: {
-//                        scales: {
-//                            //縦軸の設定
-//                            yAxes: [{
-//                                    ticks: {
-//                                        //最小値を0にする
-//                                        beginAtZero: true
-//                                    }
-//                                }]
-//                        }
-//                    }
-//                });
-//            }
 
             //ロード画面表示
             function createLoading() {

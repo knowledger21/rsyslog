@@ -454,6 +454,7 @@
                                         result.reverse();
                                         var result_length = result.length;
                                         console.time('timer1');
+                                        console.table(result);
                                         //$.each(result, function () {
                                         for (var i = 0; i < result_length; i++) {
                                             data.unshift({

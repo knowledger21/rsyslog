@@ -59,11 +59,12 @@ function retrieve() {
 
     $stmt = $db->prepare($sql);
     $stmt->execute($sqlParams);
-    $logObject = $stmt->fetchAll();
-    return array($logObject);
+//    $logObject = $stmt->fetchAll();
+//    return array($logObject);
+    return $stmt->fetchAll();
 }
 
-function output($val) {
+function output($val = array()) {
     header('Content-type: application/json');
     echo json_encode($val);
     exit;

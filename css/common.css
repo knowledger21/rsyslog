@@ -146,6 +146,10 @@ table{
     margin-top: 40px;
 }
 
+/*detailLog*/
+#reportTable{
+    margin-top: 20px;
+}
 /*ローディング*/
 .loader,
 .loader:after {
