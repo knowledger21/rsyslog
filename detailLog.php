@@ -148,6 +148,7 @@ $maxDate = $stmt->fetchColumn(0);
                             </tbody>
                         </table>
                     </div>
+                    <button id="reportBtn">レポートを出力</button>
                 </div>
             </div>
         </div>
@@ -162,6 +163,10 @@ $maxDate = $stmt->fetchColumn(0);
 
         </script>
         <script>
+            $("#reportTable").hide();
+            var dateLog01 = '';
+            var dateLog02 = '';
+            var reportList = [];
             var data = [];//取得してきたlogデータ
             var filterPriority = [];
             var facilityData = ["kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", "uucp", "cron", "authpriv", "ftp",
@@ -188,8 +193,8 @@ $maxDate = $stmt->fetchColumn(0);
             $(function () {
                 $('#showBtn').click(function () {
                     //selectbox取得
-                    var dateLog01 = document.selectForm.selectYear01.value + "-" + document.selectForm.selectMonth01.value;
-                    var dateLog02 = document.selectForm.selectYear02.value + "-" + document.selectForm.selectMonth02.value;
+                    dateLog01 = document.selectForm.selectYear01.value + "-" + document.selectForm.selectMonth01.value;
+                    dateLog02 = document.selectForm.selectYear02.value + "-" + document.selectForm.selectMonth02.value;
                     var date01 = new Date(dateLog01);
                     var date02 = new Date(dateLog02);
                     if (date02 < date01) {
@@ -208,8 +213,7 @@ $maxDate = $stmt->fetchColumn(0);
                     console.log(dateLog01 + ',' + dateLog02 + ',' + JSON.stringify(filterPriority));
                     getLog(dateLog01, dateLog02, JSON.stringify(filterPriority))
                             .then(function (result) {
-//                                createChart(createLabel(date01, date02), createData(result[0]));
-//                                console.table(result[1]);
+                                $("#reportTable").show();
                                 console.table(result);
                                 var result_length = result.length;
                                 for (var i = 0; i < result_length; i++) {
@@ -229,9 +233,31 @@ $maxDate = $stmt->fetchColumn(0);
                 });
             });
 
-            function getData(data){
+            $(function () {
+                $('#reportBtn').click(function () {
+                    for (var i = 0; i < data.length; i++) {
+                        reportList.push(data[i].values);
+                    }
+                    window.location.href = "downloadReport.php?dateLog01=" + dateLog01 + "&dateLog02=" + dateLog02 + "&reportList=" + JSON.stringify(reportList);
+                    downloadReport(dateLog01, dateLog02, JSON.stringify(reportList));
+                });
+            });
+
+//            var downloadReport = function (dateLog01, dateLog02, reportList) {
+//                var jqXHR = $.ajax({
+//                    url: 'downloadReport.php',
+//                    data: {
+//                        'dateLog01': dateLog01,
+//                        'dateLog02': dateLog02,
+//                        'reportList': reportList
+//                    }
+//                });
+//                return jqXHR.promise();
+//            };
+
+            function getData(data) {
                 var getDataList = [];
-                for(var i = 0; i < data.length; i++){
+                for (var i = 0; i < data.length; i++) {
                     getDataList.push(data[i].markup)
                 }
                 return getDataList;

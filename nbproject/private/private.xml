@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/rsyslog/index.php</file>
             <file>file:/C:/xampp/htdocs/rsyslog/detailLog.php</file>
+            <file>file:/C:/xampp/htdocs/rsyslog/getDetailLog.php</file>
             <file>file:/C:/xampp/htdocs/rsyslog/getSyslog.php</file>
+            <file>file:/C:/xampp/htdocs/rsyslog/downloadReport.php</file>
         </group>
     </open-files>
 </project-private>
