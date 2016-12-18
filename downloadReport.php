@@ -18,8 +18,9 @@ $sheet = $book->getActiveSheet();
 // セル番地で書いてみる
 $sheet->setCellValue('B2', $dateLog01.' -' .$dateLog02);
 
+
 $rowOffset = 5;
-foreach ($reportList as $row => $product) {
+foreach ((array)$reportList as $row => $product) {
     foreach ($product as $col => $value) {
         $sheet->setCellValueByColumnAndRow($col, $row + $rowOffset, $value);
     }

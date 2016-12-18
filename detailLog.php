@@ -239,7 +239,7 @@ $maxDate = $stmt->fetchColumn(0);
                         reportList.push(data[i].values);
                     }
                     window.location.href = "downloadReport.php?dateLog01=" + dateLog01 + "&dateLog02=" + dateLog02 + "&reportList=" + JSON.stringify(reportList);
-                    downloadReport(dateLog01, dateLog02, JSON.stringify(reportList));
+//                    downloadReport(dateLog01, dateLog02, JSON.stringify(reportList));
                 });
             });
 
