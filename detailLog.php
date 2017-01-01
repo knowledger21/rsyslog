@@ -148,7 +148,10 @@ $maxDate = $stmt->fetchColumn(0);
                             </tbody>
                         </table>
                     </div>
-                    <button id="reportBtn">レポートを出力</button>
+<!--                    <button id="reportBtn">レポートを出力</button>-->
+                    <form id="reportFrom" action="./downloadReport.php" method="post">
+                        <button type="submit">出力</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -213,8 +216,10 @@ $maxDate = $stmt->fetchColumn(0);
                     console.log(dateLog01 + ',' + dateLog02 + ',' + JSON.stringify(filterPriority));
                     getLog(dateLog01, dateLog02, JSON.stringify(filterPriority))
                             .then(function (result) {
+                                data = [];
+                                clusterize.clear();
                                 $("#reportTable").show();
-                                console.table(result);
+                                //console.table(result);
                                 var result_length = result.length;
                                 for (var i = 0; i < result_length; i++) {
                                     data.unshift({
@@ -224,6 +229,24 @@ $maxDate = $stmt->fetchColumn(0);
                                     });
                                 }
                                 clusterize.update(getData(data));
+
+                                //test formによるレポートダウンロード
+                                reportList.length = 0;
+//                                for (var i = 0; i < data.length; i++) {
+//                                    reportList.push(data[i].values);
+//                                }
+                                //formに値をセット
+                                $('#reportFrom').prepend('<input type="hidden" name="dateLog01" value="' + dateLog01 + '">');
+                                $('#reportFrom').prepend('<input type="hidden" name="dateLog02" value="' + dateLog02 + '">');
+                                console.log(data[0].values.length);
+                                for (var i = 0; i < data.length; i++) {
+                                    for (var j = 0; j < data[i].values.length; j++) {
+//                                        console.log(data[i][j]);
+                                        $('#reportFrom').prepend('<input type="hidden" name="reportList[' + i + '][' + j + ']" value="' + data[i].values[j] + '">');
+                                    }
+                                }
+
+                                //終了
                                 removeLoading();
                             }
                             , function () {
@@ -233,15 +256,15 @@ $maxDate = $stmt->fetchColumn(0);
                 });
             });
 
-            $(function () {
-                $('#reportBtn').click(function () {
-                    for (var i = 0; i < data.length; i++) {
-                        reportList.push(data[i].values);
-                    }
-                    window.location.href = "downloadReport.php?dateLog01=" + dateLog01 + "&dateLog02=" + dateLog02 + "&reportList=" + JSON.stringify(reportList);
-//                    downloadReport(dateLog01, dateLog02, JSON.stringify(reportList));
-                });
-            });
+//            $(function () {
+//                $('#reportBtn').click(function () {
+//                    for (var i = 0; i < data.length; i++) {
+//                        reportList.push(data[i].values);
+//                    }
+//                    window.location.href = "downloadReport.php?dateLog01=" + dateLog01 + "&dateLog02=" + dateLog02 + "&reportList=" + JSON.stringify(reportList);
+//                    //downloadReport(dateLog01, dateLog02, JSON.stringify(reportList));
+//                });
+//            });
 
 //            var downloadReport = function (dateLog01, dateLog02, reportList) {
 //                var jqXHR = $.ajax({

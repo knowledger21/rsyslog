@@ -55,7 +55,7 @@ function retrieve() {
         array_push($sqlParams, $dateLog02);
     }
     //group by句とhaving句の生成
-    $sql .= " group by message,priority,facility having (count(*) > 0)";
+    $sql .= " group by message,priority,facility having (count(*) > 0) order by priority desc";
 
     $stmt = $db->prepare($sql);
     $stmt->execute($sqlParams);
