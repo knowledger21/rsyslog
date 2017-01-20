@@ -166,6 +166,7 @@ $maxDate = $stmt->fetchColumn(0);
 
         </script>
         <script>
+            //monthを1ではなく01にする
             $("#reportTable").hide();
             var dateLog01 = '';
             var dateLog02 = '';
@@ -238,7 +239,7 @@ $maxDate = $stmt->fetchColumn(0);
                                 //formに値をセット
                                 $('#reportFrom').prepend('<input type="hidden" name="dateLog01" value="' + dateLog01 + '">');
                                 $('#reportFrom').prepend('<input type="hidden" name="dateLog02" value="' + dateLog02 + '">');
-                                console.log(data[0].values.length);
+                                //console.log(data[0].values.length);
                                 for (var i = 0; i < data.length; i++) {
                                     for (var j = 0; j < data[i].values.length; j++) {
 //                                        console.log(data[i][j]);
