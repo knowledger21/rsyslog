@@ -126,7 +126,8 @@ $maxDate = $stmt->fetchColumn(0);
                             <input type="checkbox" class="priorityArea" value="7"> 7
                         </label>
                     </div>
-                    <p id="showBtn" style="display: inline-block; margin-bottom: -4px;"><a style="margin-top: -4px;" class="btn btn-raised btn-default">表示する</a></p>
+                    <p id="showBtn" style="display: inline-block; margin-bottom: -4px; pointer-events: auto;"><a style="margin-top: -4px;" class="btn btn-raised btn-default">表示する</a></p>
+                    <!--                クリックイベントを拒否するcss pointer-events: none;-->
                 </form>
                 <div class="clusterize" id="reportTable">
                     <table>
@@ -148,9 +149,9 @@ $maxDate = $stmt->fetchColumn(0);
                             </tbody>
                         </table>
                     </div>
-<!--                    <button id="reportBtn">レポートを出力</button>-->
+                    <!--                    <button id="reportBtn">レポートを出力</button>-->
                     <form id="reportFrom" action="./downloadReport.php" method="post">
-                        <button type="submit">出力</button>
+                        <button class="btn btn-default" type="submit">レポート出力</button>
                     </form>
                 </div>
             </div>
@@ -196,6 +197,8 @@ $maxDate = $stmt->fetchColumn(0);
             //件数が多いとメモリ不足になる
             $(function () {
                 $('#showBtn').click(function () {
+                    //表示ボタンを押せなくする
+                    $('#showBtn').css('pointer-events', 'none');
                     //selectbox取得
                     dateLog01 = document.selectForm.selectYear01.value + "-" + document.selectForm.selectMonth01.value;
                     dateLog02 = document.selectForm.selectYear02.value + "-" + document.selectForm.selectMonth02.value;
@@ -249,35 +252,17 @@ $maxDate = $stmt->fetchColumn(0);
 
                                 //終了
                                 removeLoading();
+                                //表示ボタンを押せなくする
+                                $('#showBtn').css('pointer-events', 'auto');
                             }
                             , function () {
                                 alert('ログの取得に失敗しました');
                                 removeLoading();
+                                //表示ボタンを押せなくする
+                                $('#showBtn').css('pointer-events', 'auto');
                             });
                 });
             });
-
-//            $(function () {
-//                $('#reportBtn').click(function () {
-//                    for (var i = 0; i < data.length; i++) {
-//                        reportList.push(data[i].values);
-//                    }
-//                    window.location.href = "downloadReport.php?dateLog01=" + dateLog01 + "&dateLog02=" + dateLog02 + "&reportList=" + JSON.stringify(reportList);
-//                    //downloadReport(dateLog01, dateLog02, JSON.stringify(reportList));
-//                });
-//            });
-
-//            var downloadReport = function (dateLog01, dateLog02, reportList) {
-//                var jqXHR = $.ajax({
-//                    url: 'downloadReport.php',
-//                    data: {
-//                        'dateLog01': dateLog01,
-//                        'dateLog02': dateLog02,
-//                        'reportList': reportList
-//                    }
-//                });
-//                return jqXHR.promise();
-//            };
 
             function getData(data) {
                 var getDataList = [];

@@ -25,10 +25,6 @@ function retrieve() {
     global $dateLog01;
     global $dateLog02;
     global $priorityList;
-    
-    //1 -> 01へ
-    $dateLog01 = sprintf("%02d",$dateLog01);
-    $dateLog02 = sprintf("%02d",$dateLog02);
 
     $sql = "select priority, count(*) as count, facility, message from systemevents";
     //where句の生成
