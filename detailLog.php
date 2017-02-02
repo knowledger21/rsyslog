@@ -150,8 +150,10 @@ $maxDate = $stmt->fetchColumn(0);
                         </table>
                     </div>
                     <!--                    <button id="reportBtn">レポートを出力</button>-->
-                    <form id="reportFrom" action="./downloadReport.php" method="post">
-                        <button class="btn btn-default" type="submit">レポート出力</button>
+                    <form id="reportFrom" class="form-group label-floating" style="width: 35%;" action="./downloadReport.php" method="post">
+                        <label class="control-label" for="focusedInput1">ファイル名</label>
+                        <input class="form-control" id="focusedInput1" type="text" name="reportName">
+                        <button class="btn btn-default" id="reportBtn" type="submit">レポート出力</button>
                     </form>
                 </div>
             </div>
@@ -199,6 +201,8 @@ $maxDate = $stmt->fetchColumn(0);
                 $('#showBtn').click(function () {
                     //表示ボタンを押せなくする
                     $('#showBtn').css('pointer-events', 'none');
+                    //inputタグのを削除
+                    $(".setValue").remove();
                     //selectbox取得
                     dateLog01 = document.selectForm.selectYear01.value + "-" + document.selectForm.selectMonth01.value;
                     dateLog02 = document.selectForm.selectYear02.value + "-" + document.selectForm.selectMonth02.value;
@@ -240,20 +244,25 @@ $maxDate = $stmt->fetchColumn(0);
 //                                    reportList.push(data[i].values);
 //                                }
                                 //formに値をセット
-                                $('#reportFrom').prepend('<input type="hidden" name="dateLog01" value="' + dateLog01 + '">');
-                                $('#reportFrom').prepend('<input type="hidden" name="dateLog02" value="' + dateLog02 + '">');
+                                $('#reportFrom').prepend('<input class="setValue" type="hidden" name="dateLog01" value="' + dateLog01 + '">');
+                                $('#reportFrom').prepend('<input class="setValue" type="hidden" name="dateLog02" value="' + dateLog02 + '">');
                                 //console.log(data[0].values.length);
                                 for (var i = 0; i < data.length; i++) {
                                     for (var j = 0; j < data[i].values.length; j++) {
 //                                        console.log(data[i][j]);
-                                        $('#reportFrom').prepend('<input type="hidden" name="reportList[' + i + '][' + j + ']" value="' + data[i].values[j] + '">');
+                                        $('#reportFrom').prepend('<input class="setValue setLog" type="hidden" name="reportList[' + i + '][' + j + ']" value="' + data[i].values[j] + '">');
                                     }
                                 }
-
                                 //終了
                                 removeLoading();
-                                //表示ボタンを押せなくする
+                                //表示ボタンを押せるようにする
                                 $('#showBtn').css('pointer-events', 'auto');
+                                //ログがセットされてなければボタンを押せなくする
+                                if($('.setLog').length){
+                                    $("#reportBtn").prop("disabled", false);
+                                }else{
+                                    $("#reportBtn").prop("disabled", true);
+                                }
                             }
                             , function () {
                                 alert('ログの取得に失敗しました');

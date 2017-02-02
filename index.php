@@ -180,24 +180,6 @@
                             filterData.push(rows[i].markup);
                     }
                 } else {
-                    //priority,messageでのfilter
-//                    for (var i = 0, ii = rows.length; i < ii; i++) {
-//                        for (var j = 0; j < filterPriority.length; j++) {
-//                            for (var k = 0; k < filterFacility.length; k++) {
-//                                if (null == search.value || '' == search.value) {//searchが空白かnullだったらpriority,facilityのみでのfilter
-//                                    if (rows[i].active && rows[i].values[1] == filterFacility[k] && rows[i].values[2] == filterPriority[j]) {//rows[i].values[1] == 1
-//                                        filterData.push(rows[i].markup);
-//                                    }
-//                                } else {//searchが入力されたら検索ワード、priorityでのfilter
-//                                    if (rows[i].active && rows[i].values[1] == filterFacility[k] && rows[i].values[2] == filterPriority[j] && rows[i].values[3].match(search.value)) {//rows[i].values[1] == 1
-//                                        filterData.push(rows[i].markup);
-//                                    }
-//                                }
-//                            }
-//                        }
-//
-//                    }
-
                     var filterDataBk1 = [];
                     //まずsearchWordでの絞込
                     for (var i = 0; i < rows.length; i++) {
@@ -218,23 +200,6 @@
                         }
                     }
                     console.table(filterData);
-
-//                    //facilityでの絞込
-//                    for (var i = 0; i < filterDataBk1.length; i++) {
-//                        for (var j = 0; j < filterFacility.length; j++) {
-//                            if (filterDataBk1[i].values[1] == filterFacility[j]) {
-//                                filterDataBk2.push(rows[filterDataBk1]);
-//                            }
-//                        }
-//                    }
-//                    //priorityでの絞込
-//                    for (var i = 0; i < filterDataBk2.length; i++) {
-//                        for (var j = 0; j < filterPriority.length; j++) {
-//                            if (filterDataBk2[i].values[2] == filterPriority[j]) {
-//                                filterData.push(rows[filterDataBk1]);
-//                            }
-//                        }
-//                    }
                 }
                 return filterData;
             }

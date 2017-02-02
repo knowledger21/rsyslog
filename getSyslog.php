@@ -15,11 +15,9 @@ $db = new PDO('pgsql:dbname=Syslog;host=localhost;port=5432', 'rsyslog', 'knowle
 function retrieve($since_id = 0, $limit = 10) {
     global $db;
     global $test;
-    //$stmt = $db->prepare(" SELECT id,devicereportedtime,priority,message FROM SystemEvents WHERE id > :since_id ORDER BY id DESC LIMIT :limit");
     //$stmt = $db->prepare(" SELECT id,devicereportedtime,facility,priority,message FROM SystemEvents where id > :since_id and to_char(devicereportedtime,'yyyy-mm-dd') = :dateTime ORDER BY id DESC");
     $stmt = $db->prepare(" SELECT id,devicereportedtime,facility,priority,message FROM SystemEvents WHERE id > :since_id ORDER BY id DESC");
     $stmt->bindValue(':since_id', $since_id);
-    //$stmt->bindValue(':limit', $limit);
     //$stmt->bindValue(':dateTime',$test);
     $stmt->execute();
     return $stmt->fetchAll();

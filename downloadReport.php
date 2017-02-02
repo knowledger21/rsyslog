@@ -9,6 +9,7 @@ if (empty($_REQUEST['dateLog01']) && empty($_REQUEST['dateLog02'])) {
 } else {
     $dateLog01 = $_REQUEST['dateLog01'];
     $dateLog02 = $_REQUEST['dateLog02'];
+    $reportName = $_REQUEST['reportName'];
 //    $reportList = json_decode($_REQUEST['reportList']);
     $reportList = ($_REQUEST['reportList']);
 }
@@ -36,7 +37,7 @@ $sheet->getDefaultStyle()->getFont()->setSize(14);//フォントサイズ指定
 //$writer->save('test.xlsx');
 // Excel2007形式で出力する
 header("Content-Type: application/vnd.ms-excel");
-header("Content-Disposition: attachment;filename=PHPExcel.xlsx");
+header("Content-Disposition: attachment;filename=".$reportName.".xlsx");
 header("Cache-Control: max-age=0");
 $writer = PHPExcel_IOFactory::createWriter($book, "Excel2007");
 ob_end_clean();
