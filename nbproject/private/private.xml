@@ -5,6 +5,8 @@
         <group>
             <file>file:/C:/xampp/htdocs/rsyslog/index.php</file>
             <file>file:/C:/xampp/htdocs/rsyslog/detailLog.php</file>
+            <file>file:/C:/xampp/htdocs/rsyslog/getDetailLog.php</file>
+            <file>file:/C:/xampp/htdocs/rsyslog/getSyslog.php</file>
         </group>
     </open-files>
 </project-private>

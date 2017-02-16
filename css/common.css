@@ -8,6 +8,10 @@ and open the template in the editor.
     Author     : masanori.shimoji
 */
 @charset "utf-8";
+@font-face {
+   font-family: Roboto;
+   src: url('../Roboto/Roboto-Regular.ttf') format("truetype");
+}
 /*main css*/
 .center{
     text-align: center;
@@ -22,6 +26,8 @@ and open the template in the editor.
 body{
     background-color: #ECEFF1;
     box-sizing: border-box;
+    font-family: 'Roboto', cursive;
+    font-weight:normal;
 }
 #wrapper{
     font-family: 'Roboto', sans-serif;

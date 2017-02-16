@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Guardian</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -20,12 +20,12 @@
         <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="./css/ripples.min.css">
         <link rel="stylesheet" type="text/css" href="./css/common.css">
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<!--        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">-->
     </head>
     <body>
         <div id="wrapper">
             <header>
-                <h1 id="title">Keep your Server</h1>
+                <h1 id="title">Guardian</h1>
                 <div id="navi">
                     <nav id="navigation">
                         <ul>
@@ -195,7 +195,7 @@
                             filterDataBk1.push(rows[i]);
                         }
                     }
-                    console.table(filterDataBk1);
+                    //console.table(filterDataBk1);
 
                     for (var i = 0, ii = filterDataBk1.length; i < ii; i++) {
                         for (var j = 0; j < filterPriority.length; j++) {
@@ -290,9 +290,9 @@
                             //線のカーブ
                             lineTension: 0,
                             //背景色
-                            backgroundColor: "rgba(74,20,140,0.4)",
+                            backgroundColor: "rgba(255,235,59,0.4)",
                             //枠線の色
-                            borderColor: "rgba(74,20,140,1)",
+                            borderColor: "rgba(255,235,59,1)",
                             //結合点の背景色
                             pointBackgroundColor: "#fff",
                             //グラフのデータ
@@ -305,9 +305,9 @@
                             //線のカーブ
                             lineTension: 0,
                             //背景色
-                            backgroundColor: "rgba(13,71,161,0.4)",
+                            backgroundColor: "rgba(74,20,140,0.4)",
                             //枠線の色
-                            borderColor: "rgba(13,71,161,1)",
+                            borderColor: "rgba(74,20,140,1)",
                             //結合点の背景色
                             pointBackgroundColor: "#fff",
                             //グラフのデータ
@@ -390,9 +390,9 @@
                             //線のカーブ
                             lineTension: 0,
                             //背景色
-                            backgroundColor: "rgba(191,54,12,0.4)",
+                            backgroundColor: "rgba(79,195,247,0.4)",
                             //枠線の色
-                            borderColor: "rgba(191,54,12,1)",
+                            borderColor: "rgba(79,195,247,1)",
                             //結合点の背景色
                             pointBackgroundColor: "#fff",
                             //グラフのデータ
@@ -423,11 +423,11 @@
                                 .done(function (result) {
                                     if (result.length > 0) {
                                         current_id = result[0].id;
-                                        console.log(current_id);
+                                        //console.log(current_id);
                                         result.reverse();
                                         var result_length = result.length;
-                                        console.time('timer1');
-                                        console.table(result);
+                                        //console.time('timer1');
+                                        //console.table(result);
                                         //$.each(result, function () {
                                         for (var i = 0; i < result_length; i++) {
                                             //priorityが0-3のものは赤く
@@ -488,7 +488,7 @@
                                                     break;
                                             }
                                         }
-                                        console.log(data);
+                                        //console.log(data);
                                         //グラフ生成
                                         for (var i = 0; i < 8; i++) {
                                             for (var j = 0; j < 24; j++) {
@@ -500,7 +500,7 @@
                                         clusterize.update(filterRows(data, filterPriority));
                                         //console.table(data);
                                     }
-                                    console.timeEnd('timer1');
+                                    //console.timeEnd('timer1');
 
                                     retrieve_and_display();
                                 });

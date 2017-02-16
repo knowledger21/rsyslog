@@ -15,7 +15,7 @@ $maxDate = $stmt->fetchColumn(0);
 <html>
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>レポート出力</title>
+        <title>Guardian | レポート出力</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -32,12 +32,12 @@ $maxDate = $stmt->fetchColumn(0);
         <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="./css/ripples.min.css">
         <link rel="stylesheet" type="text/css" href="./css/common.css">
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+        <!--        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> -->
     </head>
     <body>
         <div id="wrapper">
             <header>
-                <h1 id="title">Keep your Server</h1>
+                <h1 id="title">Guardian</h1>
                 <div id="navi">
                     <nav id="navigation">
                         <ul>
@@ -152,8 +152,8 @@ $maxDate = $stmt->fetchColumn(0);
                     <!--                    <button id="reportBtn">レポートを出力</button>-->
                     <form id="reportFrom" class="form-group label-floating" style="width: 35%;" action="./downloadReport.php" method="post">
                         <label class="control-label" for="focusedInput1">ファイル名</label>
-                        <input class="form-control" id="focusedInput1" type="text" name="reportName">
-                        <button class="btn btn-default" id="reportBtn" type="submit">レポート出力</button>
+                        <input class="form-control fileNameInput" id="focusedInput1" type="text" name="reportName">
+                        <button class="btn btn-default" id="reportBtn" type="submit" disabled="">レポート出力</button>
                     </form>
                 </div>
             </div>
@@ -258,9 +258,9 @@ $maxDate = $stmt->fetchColumn(0);
                                 //表示ボタンを押せるようにする
                                 $('#showBtn').css('pointer-events', 'auto');
                                 //ログがセットされてなければボタンを押せなくする
-                                if($('.setLog').length){
+                                if ($('.setLog').length) {
                                     $("#reportBtn").prop("disabled", false);
-                                }else{
+                                } else {
                                     $("#reportBtn").prop("disabled", true);
                                 }
                             }
