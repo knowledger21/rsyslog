@@ -36,6 +36,7 @@
                 </div>
             </header>
             <div id="content">
+                <p id="filterMenu"><a class="btn btn-raised btn-default">フィルター設定</a></p>
                 <div id="filter">
                     <div class="checkbox">
                         <p>priority</p>
@@ -161,6 +162,13 @@
             </div>
         </div>
         <script>
+            //filterの表示、非表示
+            $(function () {
+                $('#filter').css("display", "none");
+                $('#filterMenu').on("click", function () {
+                    $('#filter').slideToggle();
+                });
+            });
             //facility
             var facilityData = ["kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", "uucp", "cron", "authpriv", "ftp",
                 "local0", "local1", "local2", "local3", "local4", "local5", "local6", "local7"];
@@ -192,7 +200,7 @@
                     for (var i = 0, ii = filterDataBk1.length; i < ii; i++) {
                         for (var j = 0; j < filterPriority.length; j++) {
                             for (var k = 0; k < filterFacility.length; k++) {
-                                if (filterDataBk1[i].active && filterDataBk1[i].values[1] == filterFacility[k] && filterDataBk1[i].values[2] == filterPriority[j]){
+                                if (filterDataBk1[i].active && filterDataBk1[i].values[1] == filterFacility[k] && filterDataBk1[i].values[2] == filterPriority[j]) {
                                     console.log(filterDataBk1[i].markup);
                                     filterData.push(filterDataBk1[i].markup);
                                 }
@@ -422,11 +430,33 @@
                                         console.table(result);
                                         //$.each(result, function () {
                                         for (var i = 0; i < result_length; i++) {
-                                            data.unshift({
-                                                values: [result[i].devicereportedtime, result[i].facility, result[i].priority, result[i].message],
-                                                markup: '<tr><td class="center logDate">' + result[i].devicereportedtime + '</td><td class="center logFacility">' + facilityData[result[i].facility] + '</td><td class="center logPriorty">' + result[i].priority + '</td><td class="logMessage">' + result[i].message + '</td></tr>',
-                                                active: true
-                                            });
+                                            //priorityが0-3のものは赤く
+                                            if (result[i].priority == '0') {
+                                                data.unshift({
+                                                    values: [result[i].devicereportedtime, result[i].facility, result[i].priority, result[i].message],
+                                                    markup: '<tr style="background:rgba(183,28,28,0.6);"><td class="center logDate">' + result[i].devicereportedtime + '</td><td class="center logFacility">' + facilityData[result[i].facility] + '</td><td class="center logPriorty">' + result[i].priority + '</td><td class="logMessage">' + result[i].message + '</td></tr>',
+                                                    active: true
+                                                });
+                                            } else if (result[i].priority == '1') {
+                                                data.unshift({
+                                                    values: [result[i].devicereportedtime, result[i].facility, result[i].priority, result[i].message],
+                                                    markup: '<tr style="background:rgba(255,235,59 ,0.6);"><td class="center logDate">' + result[i].devicereportedtime + '</td><td class="center logFacility">' + facilityData[result[i].facility] + '</td><td class="center logPriorty">' + result[i].priority + '</td><td class="logMessage">' + result[i].message + '</td></tr>',
+                                                    active: true
+                                                });
+                                            } else if (result[i].priority == '2') {
+                                                data.unshift({
+                                                    values: [result[i].devicereportedtime, result[i].facility, result[i].priority, result[i].message],
+                                                    markup: '<tr style="background:rgba(74,20,140,0.6);"><td class="center logDate">' + result[i].devicereportedtime + '</td><td class="center logFacility">' + facilityData[result[i].facility] + '</td><td class="center logPriorty">' + result[i].priority + '</td><td class="logMessage">' + result[i].message + '</td></tr>',
+                                                    active: true
+                                                });
+                                            } else {
+                                                data.unshift({
+                                                    values: [result[i].devicereportedtime, result[i].facility, result[i].priority, result[i].message],
+                                                    markup: '<tr><td class="center logDate">' + result[i].devicereportedtime + '</td><td class="center logFacility">' + facilityData[result[i].facility] + '</td><td class="center logPriorty">' + result[i].priority + '</td><td class="logMessage">' + result[i].message + '</td></tr>',
+                                                    active: true
+                                                });
+                                            }
+
 
 //                                            //時間別にpriority0-3の数を数える
                                             var logDate = new Date(result[i].devicereportedtime);//時間を取得
